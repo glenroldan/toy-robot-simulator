@@ -1,0 +1,6 @@
+require 'simulator'
+
+# file_commands = File.readlines('bin/commands.txt')
+# Simulator.new(input: file_commands).start
+
+Simulator.new.start
