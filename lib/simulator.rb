@@ -34,30 +34,35 @@ class Simulator
   end
 
   def execute(commands)
-    command_type, *args = commands.split(' ')
-
-    # Raise an exception if the command is not valid.
-    raise ArgumentError, 'Invalid command' unless COMMANDS.include?(command_type)
-
-    # If the command is PLACE, then the arguments are the tabletop, the x, y, and facing.
-    args = place_arguments(args) if command_type.eql?('PLACE')
-
     begin
+      command_type, *args = commands.split(' ')
+
+      # Raise an exception if the command is not valid.
+      if !COMMANDS.include?(command_type)
+        raise ArgumentError, "Invalid command, valid commands are #{COMMANDS}"
+      end
+
+      # If the command is PLACE, then the arguments are the tabletop, the x, y, and facing.
+      args = place_arguments(args) if command_type.eql?('PLACE')
+
       # Call the method on the robot.
       @robot.send(command_type.downcase, *args)
-    rescue ArgumentError, TypeError
-      # Ignore the error if not valid.
-    rescue => e
-      return e.message
+    rescue ArgumentError, TypeError => e
+      e.message
     end
   end
 
   private
 
   # Returns the arguments for the PLACE command.
+  # Raise an exception if the arguments are not valid.
   def place_arguments(args)
-    tokens = args.join.split(',')
+    begin
+      tokens = args.join.split(',')
 
-    return [@tabletop, Integer(tokens[0]), Integer(tokens[1]), tokens[2]]
+      [@tabletop, Integer(tokens[0]), Integer(tokens[1]), tokens[2]]
+    rescue
+      raise ArgumentError, 'Invalid PLACE arguments, requires X and Y position and facing direction'
+    end
   end
 end
