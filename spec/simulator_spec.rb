@@ -43,14 +43,14 @@ describe Simulator do
 
     context 'when invalid' do
       context 'with invalid command' do
-        it 'should raise an invalid command' do
-          expect { simulator.execute('PUT') }.to raise_exception(ArgumentError)
+        it 'should returns an error message' do
+          expect(simulator.execute('PUT')).to eq 'Invalid command, valid commands are ["PLACE", "LEFT", "RIGHT", "MOVE", "REPORT"]'
         end
       end
 
-      context 'without arguments on PLACE' do
-        it 'should ignore an invalid arguments exception' do
-          expect { simulator.execute('PLACE') }.not_to raise_exception(ArgumentError)
+      context 'with invalid PLACE arguments' do
+        it 'should returns an error message' do
+          expect(simulator.execute('PLACE')).to eq 'Invalid PLACE arguments, requires X and Y position and facing direction'
         end
       end
     end
